@@ -15,9 +15,12 @@ export default class PlayGame extends React.Component {
 			randomNumber: Math.floor(Math.random()*100)+1,
 			guessedNumber: '', 
 			guessedNumberHistory: [],
-			successMessage: '',
+			successMessage: 'Make your Guess',
 			success: false,
-			guessRepeated: false
+			guessRepeated: false,
+			diff: 100,
+			beyondLimit: false,
+			noneNumeric: false
 		}
 	}
 
@@ -34,7 +37,8 @@ export default class PlayGame extends React.Component {
 
 	setGuessedNumber(guessedNumber){
 		this.setState({
-			guessedNumber
+			guessedNumber,
+			diff: Math.abs(this.state.randomNumber - guessedNumber)
 		});
 	}
 
@@ -45,34 +49,38 @@ export default class PlayGame extends React.Component {
 			guessedNumberHistory: [...this.state.guessedNumberHistory, this.state.guessedNumber]
 		});
 
-		if(this.state.guessedNumberHistory.find(val => val === this.state.guessedNumber)) {
+		if(isNaN(this.state.guessedNumber)){
+			this.setState({
+				noneNumeric: true
+			})
+
+		} else if(this.state.guessedNumber < 1 || this.state.guessedNumber > 100 ) {
+			this.setState({
+				beyondLimit: true
+			})
+
+		} else if(this.state.guessedNumberHistory.find(val => val === this.state.guessedNumber)) {
 			this.setState({
 				guessedNumber: '',
 				guessRepeated: true
 			})	
 		} else {
 			this.setState({
-
 				guessRepeated: false
 			})			
 		}
 
-
-
-		const diff = Math.abs(this.state.guessedNumber - this.state.randomNumber);
-
-		if(this.state.guessedNumber === this.state.randomNumber) {
+		if(this.state.diff === 0) {
 			this.setState({
-				successMessage: 'Good job! You won! Click NEW GAME to play again',
+				successMessage: 'Good job! You won! Click NEW GAME to play again!',
 				success: true
 			})
-
-		} else if (this.diff <= 5) {
+		} else if (this.state.diff <= 5) {
 			this.setState({
 				successMessage: 'Hot',
 				success: false
 			})
-		} else {
+		} else if(this.state.diff > 5){
 			this.setState({
 				successMessage: 'Cold',
 				success: false
@@ -85,16 +93,39 @@ export default class PlayGame extends React.Component {
 	}
 
 	render() {
-		if(this.state.success) {
-
-		} else if(this.state.guessRepeated) {
+		if(this.state.guessRepeated) {
 			alert('You have already guessed and Random #: ' + this.state.randomNumber);
 			this.setState({
-					guessRepeated: false,
-					guessedNumber: ''
+				guessRepeated: false,
+				guessedNumber: '',
+				guessedNumberHistory: [...new Set(this.state.guessedNumberHistory)]
 			});	
+		} else if(this.state.beyondLimit) {
+			alert('Guess should be between 1 and 100!');
+			const guessedHistory = this.state.guessedNumberHistory.splice(-1,1);
+			this.setState({
+				beyondLimit: false,
+				guessedNumber: '',
+				guessedNumberHistory: this.state.guessedNumberHistory
+			});
+		} else if(this.state.noneNumeric) {
+			alert('Guess numbers only!');
+			const guessedHistory = this.state.guessedNumberHistory.splice(-1,1);
+			this.setState({
+				noneNumeric: false,
+				guessedNumber: '',
+				guessedNumberHistory: this.state.guessedNumberHistory
+			});
+		} else if (this.state.success) {
+			this.setState({
+				success: false,
+				randomNumber: Math.floor(Math.random()*100)+1,
+				guessedNumber: '',
+				guessedNumberHistory: []
+			});
 		}
 
+		const title = 'HOT or COLD';
 		return (
 			<div className="main-container row" >
 				<NewGame onClick={randomNumber => this.setRandomNumber(randomNumber)}/>
@@ -102,7 +133,10 @@ export default class PlayGame extends React.Component {
 						value={this.state.guessedNumberHistory} 
 						onSubmit={e => this.handleSubmitEvent(e)} 
 						tempValue={this.state.guessedNumber}
-						successMessage={this.state.successMessage}/>
+						successMessage={this.state.successMessage}
+						title={title} 
+						boolean={this.state.boolean}
+						min={1} max={100}/>
 			</div>
 		);
 	}
