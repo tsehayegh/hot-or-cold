@@ -1,0 +1,91 @@
+* {
+	box-sizing: border-box;
+}
+
+body {
+	background-size: cover;
+	background-position: center;
+	background-color: #1F253D;
+}
+
+
+.container-group {
+	position: relative;
+	z-index: 1;
+	width: 400px;
+	height: 400px;
+	margin: 0 auto;
+	text-align: center;
+	background-color:  rgb(105,116,120);
+	vertical-align: middle;
+	  position: absolute;
+  left: 50%;
+  top: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+
+.container-group label,
+.container-group input {
+	font-size: 1.5em;
+	display: block;
+}
+
+#guess-number {
+	width: 80%;
+	font-size: 25px;
+	line-height: 2em;
+	display: inline-block;
+	text-align: center;
+	margin: 20px;
+}
+
+.guess-button {
+	width: 80%;
+	font-size: 25px;
+	font-weight: bold;
+	margin:  15px;
+	line-height: 2em;
+}
+
+
+.container-group label {
+	width: 100%;
+}
+
+.main-title {
+	background-color: #1F253D;
+	color: #fff;
+}
+
+.lbl-result {
+	display: block;
+	background-color: red;
+	width: 100%;
+	position: relative;
+
+}
+
+
+.lbl-result,
+.guessed-number,
+.lbl-guess-history {
+	font-size: 25px;
+	height: 2.5em;
+	vertical-align: middle;
+}
+
+.lbl-guess-history {
+	background-color: azure;
+	position: absolute;
+	bottom: 0;
+
+}
+
+.lbl-guess-history span {
+	color: #fff;
+	background-color: blue;
+	margin: 5px;
+}
+
+
